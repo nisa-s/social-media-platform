@@ -29,4 +29,15 @@ source sample-data.sql;
 - Posts 1:N Likes
 - Users M:N Users (Follows)
 - Posts M:N Hashtags
+
+## Backend Bağlantısı
+
+Backend uygulaması environment variable kullanarak bağlanır:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/social_media_db
+spring.datasource.username=root
+spring.datasource.password=${DB_PASSWORD:defaultpassword}
+```
+
+Detaylar için [Backend README](../backend/README.md) dosyasına bakın.
 ```

@@ -89,7 +89,6 @@ spring.datasource.password=your_actual_password
 ⚠️ **Dikkat:** Bu durumda dosyayı Git'e commit etmeyin!
 
 ## 📦 Proje Yapısı
-
 ```
 backend/
 ├── src/
@@ -97,23 +96,52 @@ backend/
 │   │   ├── java/
 │   │   │   └── com/socialmedia/backend/
 │   │   │       ├── BackendApplication.java
-│   │   │       ├── entity/         # JPA Entity sınıfları
+│   │   │       ├── entity/         # JPA Entity sınıfları (Kişi 1 ✅)
 │   │   │       │   ├── User.java
 │   │   │       │   ├── Post.java
 │   │   │       │   ├── Like.java
 │   │   │       │   ├── Hashtag.java
 │   │   │       │   └── Follow.java
-│   │   │       ├── repository/     # Spring Data JPA Repository'ler
+│   │   │       ├── repository/     # Spring Data JPA Repository'ler (Kişi 1 ✅)
 │   │   │       │   ├── UserRepository.java
 │   │   │       │   ├── PostRepository.java
 │   │   │       │   ├── LikeRepository.java
 │   │   │       │   ├── HashtagRepository.java
 │   │   │       │   └── FollowRepository.java
-│   │   │       ├── service/        # İş mantığı (Kişi 2 - Devam ediyor)
-│   │   │       └── controller/     # REST API (Kişi 3 - Beklemede)
+│   │   │       ├── dto/            # Data Transfer Objects (Kişi 2 ✅)
+│   │   │       │   ├── UserDTO.java
+│   │   │       │   ├── PostDTO.java
+│   │   │       │   ├── LikeDTO.java
+│   │   │       │   ├── FollowDTO.java
+│   │   │       │   └── HashtagDTO.java
+│   │   │       ├── exception/      # Custom Exception sınıfları (Kişi 2 ✅)
+│   │   │       │   ├── UserNotFoundException.java
+│   │   │       │   ├── PostNotFoundException.java
+│   │   │       │   ├── InvalidCredentialsException.java
+│   │   │       │   ├── DuplicateUsernameException.java
+│   │   │       │   ├── DuplicateEmailException.java
+│   │   │       │   ├── AlreadyFollowingException.java
+│   │   │       │   ├── NotFollowingException.java
+│   │   │       │   ├── AlreadyLikedException.java
+│   │   │       │   └── UnauthorizedException.java
+│   │   │       ├── service/        # İş mantığı - Business Logic (Kişi 2 ✅)
+│   │   │       │   ├── UserService.java
+│   │   │       │   ├── PostService.java
+│   │   │       │   ├── LikeService.java
+│   │   │       │   └── FollowService.java
+│   │   │       └── controller/     # REST API (Kişi 3 🚧)
+│   │   │           ├── UserController.java
+│   │   │           ├── PostController.java (Beklemede)
+│   │   │           ├── LikeController.java (Beklemede)
+│   │   │           └── FollowController.java (Beklemede)
 │   │   └── resources/
-│   │       └── application.properties
+│   │       ├── application.properties
+│   │       └── schema.sql (opsiyonel)
 │   └── test/
+│       └── java/
+│           └── com/socialmedia/backend/
+│               ├── service/         # Service testleri
+│               └── controller/      # Controller testleri
 └── pom.xml
 ```
 

@@ -3,6 +3,7 @@ package com.socialmedia.backend.repository;
 import com.socialmedia.backend.entity.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,12 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
     
     // Beğeni var mı kontrolü
     boolean existsByUserUserIdAndPostPostId(Integer userId, Integer postId);
+    
+    // ⬇️ BUNLARI EKLEYİN ⬇️
+    
+    // Post'u beğenen tüm kullanıcılar
+    List<Like> findByPostPostId(Integer postId);
+    
+    // Kullanıcının beğendiği tüm post'lar
+    List<Like> findByUserUserId(Integer userId);
 }

@@ -114,8 +114,10 @@ backend/
 │   │   │       │   ├── LikeDTO.java
 │   │   │       │   ├── FollowDTO.java
 │   │   │       │   └── HashtagDTO.java
-│   │   │       ├── exception/      # Custom Exception sınıfları (Kişi 2 ✅)
+│   │   │       ├── exception/      # Custom ve Global Exception sınıfları (Kişi 2 ✅)
 │   │   │       │   ├── UserNotFoundException.java
+|   |   |       |   ├── GlobalExceptionHandler.java
+|   |   |       |   ├── ErrorResponse.java
 │   │   │       │   ├── PostNotFoundException.java
 │   │   │       │   ├── InvalidCredentialsException.java
 │   │   │       │   ├── DuplicateUsernameException.java

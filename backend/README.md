@@ -196,19 +196,20 @@ spring.jpa.show-sql=true
 - [x] MySQL bağlantısı yapılandırıldı
 - [x] Environment variable yapılandırması
 
-### Kişi 2 (Service Katmanı) - 🚧 DEVAM EDİYOR
-- [ ] UserService (kayıt, giriş, profil yönetimi)
-- [ ] PostService (post oluşturma, listeleme, silme)
-- [ ] LikeService (beğeni/beğenmeme)
-- [ ] FollowService (takip/takipten çık)
-- [ ] DTO sınıfları
-- [ ] Exception handling
-- [ ] OOP prensipleri raporu
+### Kişi 2 (Service Katmanı) - ✅ TAMAMLANDI
+- [x] UserService (kayıt, giriş, profil yönetimi)
+- [x] PostService (post oluşturma, listeleme, silme)
+- [x] LikeService (beğeni/beğenmeme)
+- [x] FollowService (takip/takipten çık)
+- [x] DTO sınıfları
+- [x] Exception handling
+- [x] OOP prensipleri raporu
 
 ### Kişi 3 (Controller + Frontend) - ⏳ BEKLEMEDE
 - [ ] REST Controller'lar
 - [ ] API dokümantasyonu
 - [ ] Frontend entegrasyonu
+-
 
 ## 🐛 Sorun Giderme
 

@@ -1,29 +1,31 @@
 package com.socialmedia.backend.repository;
 
-import com.socialmedia.backend.entity.Follow;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.socialmedia.backend.entity.Follow;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Integer> {
     
     // Takip ilişkisi var mı?
-    Optional<Follow> findByFollowerUserIdAndFollowingUserId(Integer followerId, Integer followingId);
+    Optional<Follow> findByFollower_UserIdAndFollowing_UserId(Integer followerId, Integer followingId);
     
     // Takip ediyor mu kontrolü
-    boolean existsByFollowerUserIdAndFollowingUserId(Integer followerId, Integer followingId);
+    boolean existsByFollower_UserIdAndFollowing_UserId(Integer followerId, Integer followingId);
     
     // Takipçi sayısı
-    long countByFollowingUserId(Integer userId);
+    long countByFollowing_UserId(Integer userId);
     
     // Takip edilen sayısı
-    long countByFollowerUserId(Integer userId);
+    long countByFollower_UserId(Integer userId);
 
       // Bir kullanıcının takipçileri (onu takip edenler)
-    List<Follow> findByFollowingUserId(Integer userId);
+    List<Follow> findByFollowing_UserId(Integer userId);
     
     // Bir kullanıcının takip ettikleri
-    List<Follow> findByFollowerUserId(Integer userId);
+    List<Follow> findByFollower_UserId(Integer userId);
 }

@@ -1,19 +1,21 @@
 package com.socialmedia.backend.service;
 
 
-import com.socialmedia.backend.dto.FollowDTO;
-import com.socialmedia.backend.dto.UserDTO;
-import com.socialmedia.backend.entity.Follow;
-import com.socialmedia.backend.entity.User;
-import com.socialmedia.backend.repository.FollowRepository;
-import com.socialmedia.backend.repository.UserRepository;
-import com.socialmedia.backend.exception.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.socialmedia.backend.dto.FollowDTO;
+import com.socialmedia.backend.dto.UserDTO;
+import com.socialmedia.backend.entity.Follow;
+import com.socialmedia.backend.entity.User;
+import com.socialmedia.backend.exception.ApiExceptions;
+import com.socialmedia.backend.repository.FollowRepository;
+import com.socialmedia.backend.repository.UserRepository;
 
 /**
  * Takip işlemlerini yöneten Service sınıfı.
@@ -44,17 +46,17 @@ public class FollowService {
         
         // Kullanıcıları kontrol et
         User follower = userRepository.findById(followerId)
-                .orElseThrow(() -> new UserNotFoundException(Long.valueOf(followerId)));
+                .orElseThrow(() -> new ApiExceptions.UserNotFound(Long.valueOf(followerId)));
         
         User following = userRepository.findById(followingId)
-                .orElseThrow(() -> new UserNotFoundException(Long.valueOf(followingId)));
+                .orElseThrow(() -> new ApiExceptions.UserNotFound(Long.valueOf(followingId)));
         
         // Zaten takip ediliyor mu kontrol et
         Optional<Follow> existingFollow = followRepository
-                .findByFollowerUserIdAndFollowingUserId(followerId, followingId);
+                .findByFollower_UserIdAndFollowing_UserId(followerId, followingId);
         
         if (existingFollow.isPresent()) {
-            throw new AlreadyFollowingException(following.getUsername());
+            throw new ApiExceptions.AlreadyFollowing(Long.valueOf(followerId), Long.valueOf(followingId));
         }
         
         // Yeni takip ilişkisi oluştur
@@ -79,17 +81,17 @@ public class FollowService {
     public void unfollowUser(Integer followerId, Integer followingId) {
         // Kullanıcıları kontrol et
         if (!userRepository.existsById(followerId)) {
-            throw new UserNotFoundException(Long.valueOf(followerId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(followerId));
         }
         if (!userRepository.existsById(followingId)) {
-            throw new UserNotFoundException(Long.valueOf(followingId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(followingId));
         }
         
         // Takip ilişkisini bul
         Follow follow = followRepository
-                .findByFollowerUserIdAndFollowingUserId(followerId, followingId)
-                .orElseThrow(() -> new NotFollowingException(Long.valueOf(followerId), Long.valueOf(followingId)));
-        
+                .findByFollower_UserIdAndFollowing_UserId(followerId, followingId)
+                .orElseThrow(() -> new ApiExceptions.NotFollowing(Long.valueOf(followerId), Long.valueOf(followingId)));
+
         // Takip ilişkisini sil
         followRepository.delete(follow);
     }
@@ -102,11 +104,11 @@ public class FollowService {
      */
     public List<UserDTO> getFollowers(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
-        
-        List<Follow> follows = followRepository.findByFollowingUserId(userId);
-        
+
+        List<Follow> follows = followRepository.findByFollowing_UserId(userId);
+
         return follows.stream()
                 .map(follow -> convertUserToDTO(follow.getFollower()))
                 .collect(Collectors.toList());
@@ -120,10 +122,10 @@ public class FollowService {
      */
     public List<UserDTO> getFollowing(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
         
-        List<Follow> follows = followRepository.findByFollowerUserId(userId);
+        List<Follow> follows = followRepository.findByFollower_UserId(userId);
         
         return follows.stream()
                 .map(follow -> convertUserToDTO(follow.getFollowing()))
@@ -138,10 +140,10 @@ public class FollowService {
      */
     public long getFollowerCount(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
         
-        return followRepository.countByFollowingUserId(userId);
+        return followRepository.countByFollowing_UserId(userId);
     }
     
     /**
@@ -152,10 +154,10 @@ public class FollowService {
      */
     public long getFollowingCount(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
         
-        return followRepository.countByFollowerUserId(userId);
+        return followRepository.countByFollower_UserId(userId);
     }
     
     /**
@@ -165,7 +167,7 @@ public class FollowService {
      * @return Takip ediyorsa true, değilse false
      */
     public boolean isFollowing(Integer followerId, Integer followingId) {
-        return followRepository.existsByFollowerUserIdAndFollowingUserId(followerId, followingId);
+        return followRepository.existsByFollower_UserIdAndFollowing_UserId(followerId, followingId);
     }
     
     /**

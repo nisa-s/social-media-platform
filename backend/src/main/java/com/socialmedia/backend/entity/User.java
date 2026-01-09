@@ -1,9 +1,21 @@
 package com.socialmedia.backend.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Users")
@@ -28,6 +40,9 @@ public class User {
     
     @Column(name = "bio", length = 500)
     private String bio;
+
+    @Column(name = "profile_picture", columnDefinition = "TEXT")
+    private String profilePicture; // Base64 formatında saklayacağız
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

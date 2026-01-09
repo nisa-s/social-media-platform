@@ -1,15 +1,16 @@
 package com.socialmedia.backend.service;
 
-import com.socialmedia.backend.dto.UserDTO;
-import com.socialmedia.backend.entity.User;
-import com.socialmedia.backend.exception.*;
-import com.socialmedia.backend.repository.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.socialmedia.backend.dto.UserDTO;
+import com.socialmedia.backend.entity.User;
+import com.socialmedia.backend.exception.ApiExceptions;
+import com.socialmedia.backend.repository.UserRepository;
 
 /**
  * Kullanıcı işlemlerini yöneten Service sınıfı.
@@ -33,12 +34,13 @@ public class UserService {
     public UserDTO register(String username, String email, String password) {
         // Validation: Username kontrolü
         if (userRepository.existsByUsername(username)) {
-            throw new DuplicateUsernameException(username);
+
+            throw new ApiExceptions.DuplicateUsername(username);
         }
         
         // Validation: Email kontrolü
         if (userRepository.existsByEmail(email)) {
-            throw new DuplicateEmailException(email);
+            throw new ApiExceptions.DuplicateEmail(email);
         }
         
         // Yeni User entity oluştur
@@ -67,11 +69,11 @@ public class UserService {
         // Username veya email ile kullanıcıyı bul
         User user = userRepository.findByUsername(username)
                 .orElseGet(() -> userRepository.findByEmail(username)
-                        .orElseThrow(() -> new InvalidCredentialsException()));
+                        .orElseThrow(() -> new ApiExceptions.InvalidCredentials()));
         
         // Şifre kontrolü
         if (!verifyPassword(password, user.getPasswordHash())) {
-            throw new InvalidCredentialsException();
+            throw new ApiExceptions.InvalidCredentials();
         }
         
         return convertToDTO(user);
@@ -85,7 +87,7 @@ public class UserService {
      */
     public UserDTO getUserProfile(Integer userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(Long.valueOf(userId)));
+                .orElseThrow(() -> new ApiExceptions.UserNotFound(Long.valueOf(userId)));
         
         return convertToDTO(user);
     }
@@ -97,11 +99,14 @@ public class UserService {
      * @throws UserNotFoundException Kullanıcı bulunamazsa
      */
     public UserDTO getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("username", username));
-        
-        return convertToDTO(user);
-    }
+    User user = userRepository.findByUsername(username)
+            .orElseThrow(() ->
+                    new ApiExceptions.UserNotFoundByUsername(username)
+            );
+
+    return convertToDTO(user);
+}
+
     
     /**
      * Kullanıcı profilini günceller
@@ -114,12 +119,12 @@ public class UserService {
      */
     public UserDTO updateProfile(Integer userId, String email, String bio) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(Long.valueOf(userId)));
+                .orElseThrow(() -> new ApiExceptions.UserNotFound(Long.valueOf(userId)));
         
         // Email güncellemesi
         if (email != null && !email.equals(user.getEmail())) {
             if (userRepository.existsByEmail(email)) {
-                throw new DuplicateEmailException(email);
+                throw new ApiExceptions.DuplicateEmail(email);
             }
             user.setEmail(email);
         }

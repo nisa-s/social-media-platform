@@ -1,19 +1,21 @@
 package com.socialmedia.backend.service;
 
-import com.socialmedia.backend.dto.LikeDTO;
-import com.socialmedia.backend.entity.Like;
-import com.socialmedia.backend.entity.Post;
-import com.socialmedia.backend.entity.User;
-import com.socialmedia.backend.repository.LikeRepository;
-import com.socialmedia.backend.repository.PostRepository;
-import com.socialmedia.backend.repository.UserRepository;
-import com.socialmedia.backend.exception.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.socialmedia.backend.dto.LikeDTO;
+import com.socialmedia.backend.entity.Like;
+import com.socialmedia.backend.entity.Post;
+import com.socialmedia.backend.entity.User;
+import com.socialmedia.backend.exception.ApiExceptions;
+import com.socialmedia.backend.repository.LikeRepository;
+import com.socialmedia.backend.repository.PostRepository;
+import com.socialmedia.backend.repository.UserRepository;
 
 /**
  * Beğeni işlemlerini yöneten Service sınıfı.
@@ -43,16 +45,16 @@ public class LikeService {
     public LikeDTO likePost(Integer userId, Integer postId) {
         // Kullanıcıyı kontrol et
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(Long.valueOf(userId)));
+                .orElseThrow(() -> new ApiExceptions.UserNotFound(Long.valueOf(userId)));
         
         // Post'u kontrol et
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(Long.valueOf(postId)));
+                .orElseThrow(() -> new ApiExceptions.PostNotFound(Long.valueOf(postId)));
         
         // Zaten beğenilmiş mi kontrol et
         Optional<Like> existingLike = likeRepository.findByUserUserIdAndPostPostId(userId, postId);
         if (existingLike.isPresent()) {
-            throw new AlreadyLikedException(Long.valueOf(postId));
+            throw new ApiExceptions.AlreadyLiked(Long.valueOf(postId), Long.valueOf(userId));
         }
         
         // Yeni beğeni oluştur
@@ -77,10 +79,10 @@ public class LikeService {
     public void unlikePost(Integer userId, Integer postId) {
         // Kullanıcı ve post kontrolü
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
         if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(Long.valueOf(postId));
+            throw new ApiExceptions.PostNotFound(Long.valueOf(postId));
         }
         
         // Beğeniyi bul
@@ -116,7 +118,7 @@ public class LikeService {
      */
     public long getPostLikeCount(Integer postId) {
         if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(Long.valueOf(postId));
+            throw new ApiExceptions.PostNotFound(Long.valueOf(postId));
         }
         
         return likeRepository.countByPostPostId(postId);
@@ -130,7 +132,7 @@ public class LikeService {
      */
     public List<LikeDTO> getPostLikes(Integer postId) {
         if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(Long.valueOf(postId));
+            throw new ApiExceptions.PostNotFound(Long.valueOf(postId));
         }
         
         List<Like> likes = likeRepository.findByPostPostId(postId);
@@ -148,7 +150,7 @@ public class LikeService {
      */
     public List<LikeDTO> getUserLikes(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
         
         List<Like> likes = likeRepository.findByUserUserId(userId);

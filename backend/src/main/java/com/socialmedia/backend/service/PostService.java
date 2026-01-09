@@ -1,17 +1,19 @@
 package com.socialmedia.backend.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.socialmedia.backend.dto.PostDTO;
 import com.socialmedia.backend.dto.UserDTO;
 import com.socialmedia.backend.entity.Post;
 import com.socialmedia.backend.entity.User;
+import com.socialmedia.backend.exception.ApiExceptions;
 import com.socialmedia.backend.repository.PostRepository;
 import com.socialmedia.backend.repository.UserRepository;
-import com.socialmedia.backend.exception.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Post işlemlerini yöneten Service sınıfı.
@@ -36,7 +38,7 @@ public class PostService {
     public PostDTO createPost(Integer userId, String content) {
         // Kullanıcıyı bul
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(Long.valueOf(userId)));
+                .orElseThrow(() -> new ApiExceptions.UserNotFound(Long.valueOf(userId)));
         
         // Yeni Post oluştur
         Post post = new Post();
@@ -61,7 +63,7 @@ public class PostService {
      */
     public PostDTO getPostById(Integer postId, Integer currentUserId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(Long.valueOf(postId)));
+                .orElseThrow(() -> new ApiExceptions.PostNotFound(Long.valueOf(postId)));
         
         return convertToDTO(post, currentUserId);
     }
@@ -76,7 +78,7 @@ public class PostService {
     public List<PostDTO> getUserPosts(Integer userId, Integer currentUserId) {
         // Kullanıcının var olduğunu kontrol et
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
         
         // Kullanıcının post'larını getir
@@ -96,7 +98,7 @@ public class PostService {
     public List<PostDTO> getFeed(Integer userId) {
         // Kullanıcının var olduğunu kontrol et
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(Long.valueOf(userId));
+            throw new ApiExceptions.UserNotFound(Long.valueOf(userId));
         }
         
         //  Takip edilen kullanıcıların post'larını getir
@@ -132,11 +134,11 @@ public class PostService {
      */
     public PostDTO updatePost(Integer postId, Integer userId, String newContent) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(Long.valueOf(postId)));
+                .orElseThrow(() -> new ApiExceptions.PostNotFound(Long.valueOf(postId)));
         
         // Yetki kontrolü: Sadece post sahibi güncelleyebilir
         if (!post.getUser().getUserId().equals(userId)) {
-            throw new UnauthorizedException("update this post", Long.valueOf(userId));
+            throw new ApiExceptions.Unauthorized();
         }
         
         post.setContent(newContent);
@@ -155,11 +157,11 @@ public class PostService {
      */
     public void deletePost(Integer postId, Integer userId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(Long.valueOf(postId)));
+                .orElseThrow(() -> new ApiExceptions.PostNotFound(Long.valueOf(postId)));
         
         // Yetki kontrolü: Sadece post sahibi silebilir
         if (!post.getUser().getUserId().equals(userId)) {
-            throw new UnauthorizedException("delete this post", Long.valueOf(userId));
+            throw new ApiExceptions.Unauthorized();
         }
         
         postRepository.delete(post);

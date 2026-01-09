@@ -196,34 +196,41 @@ async function showFeed() {
 }
 
 async function updateUserStats() {
+    if (!currentUser) return;
+    
+    // UI üzerindeki kullanıcı adını hemen yaz
     document.getElementById('stat-username').innerText = `@${currentUser.username}`;
-    document.getElementById('avatar-initial').innerText = currentUser.username.charAt(0).toUpperCase();
+    
     try {
-        const res = await axios.get(`${API_BASE}/auth/profile/${currentUser.userId}`);
-        if (res.data.profilePicture) {
-            const img = document.getElementById('profile-img');
-            img.src = res.data.profilePicture;
-            img.classList.remove('hidden');
-            document.getElementById('initial-text').classList.add('hidden');
-        }
-        // takip / takipçi sayılarını güncelle
-        const followingRes = await axios.get(`${API_BASE}/follows/following/${currentUser.userId}`);
-        const followersRes = await axios.get(`${API_BASE}/follows/followers/${currentUser.userId}`);
-        document.getElementById('stat-following').innerText =
-            Array.isArray(followingRes.data) ? followingRes.data.length : (followingRes.data?.count ?? 0);
+        const uid = parseInt(currentUser.userId); // Sayısal formata çevir
+        
+        // FollowController metodlarını çağır: /api/follows/following/{userId} ve /followers/{userId}
+        const [followingRes, followersRes] = await Promise.all([
+            axios.get(`${API_BASE}/follows/following/${uid}`),
+            axios.get(`${API_BASE}/follows/followers/${uid}`)
+        ]);
 
-        document.getElementById('stat-followers').innerText =
-            Array.isArray(followersRes.data) ? followersRes.data.length : (followersRes.data?.count ?? 0);
+        // Controller List<UserDTO> döndüğü için uzunluklarını alıyoruz
+        const followingCount = followingRes.data.length;
+        const followersCount = followersRes.data.length;
 
-        // bazı backend'ler {count: x} döndürebilir, o yüzden güvenli al
-        const followingCount = Array.isArray(followingRes.data) ? followingRes.data.length : (followingRes.data?.count ?? 0);
-        const followersCount = Array.isArray(followersRes.data) ? followersRes.data.length : (followersRes.data?.count ?? 0);
-
+        // HTML elementlerini güncelle
         document.getElementById('stat-following').innerText = followingCount;
         document.getElementById('stat-followers').innerText = followersCount;
 
-    } catch (err) { console.warn(err); }
+        // Profil fotoğrafı kontrolü (UserService/AuthController üzerinden)
+        const profileRes = await axios.get(`${API_BASE}/auth/profile/${uid}`);
+        if (profileRes.data.profilePicture) {
+            const img = document.getElementById('profile-img');
+            img.src = profileRes.data.profilePicture;
+            img.classList.remove('hidden');
+            document.getElementById('initial-text').classList.add('hidden');
+        }
+    } catch (err) {
+        console.warn("İstatistikler güncellenirken hata oluştu:", err);
+    }
 }
+
 // -------------------- HASHTAG DESTEK (SADECE EK) --------------------
 
 // Metinden hashtagleri çıkar (#java, #bahar gibi)

@@ -131,7 +131,7 @@ backend/
 │   │   │       │   ├── PostService.java
 │   │   │       │   ├── LikeService.java
 │   │   │       │   └── FollowService.java
-│   │   │       └── controller/     # REST API (Kişi 3 🚧)
+│   │   │       └── controller/     # REST API (Kişi 3 ✅)
 │   │   │           ├── UserController.java
 │   │   │           ├── PostController.java (Beklemede)
 │   │   │           ├── LikeController.java (Beklemede)
@@ -207,10 +207,10 @@ spring.jpa.show-sql=true
 - [x] Exception handling
 - [x] OOP prensipleri raporu
 
-### Kişi 3 (Controller + Frontend) - ⏳ BEKLEMEDE
-- [ ] REST Controller'lar
-- [ ] API dokümantasyonu
-- [ ] Frontend entegrasyonu
+### Kişi 3 (Controller + Frontend) - ✅ TAMAMLANDI
+- [x] REST Controller'lar
+- [x] API dokümantasyonu
+- [x] Frontend entegrasyonu
 -
 
 ## 🐛 Sorun Giderme

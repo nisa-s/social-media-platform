@@ -368,7 +368,7 @@ Daha fazla bilgi için:
 - **[Database Technical Docs](database/TECHNICAL_DOCS.md)** - Detaylı veritabanı dokümantasyonu
 - **[Backend README](backend/README.md)** - Backend kurulum ve kullanım
 - **[ER Diagram](docs/ER-Diagram.png)** - Entity-Relationship diyagramı
-- **[Proje Raporu](docs/SOSYAL MEDYA MİKROBLOG PLATFORMU.docx)** - Tam proje raporu
+- **[Proje Raporu](docs/SOSYAL_MEDYA_RAPOR.docx)** - Tam proje raporu
 
 ## 📊 Proje İstatistikleri
 

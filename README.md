@@ -1,25 +1,38 @@
-# 🌐 Social Media Platform
+# 🌐 Sosyal Medya Mikroblog Platformu
 
-Mikro blog sosyal medya platformu projesi. Spring Boot backend ve modern frontend teknolojileri kullanılarak geliştirilmiştir.
+Mikro blog sosyal medya platformu projesi. Spring Boot backend ve MySQL veritabanı kullanılarak geliştirilmiş, tam özellikli bir REST API uygulamasıdır.
+
+## 👥 Proje Ekibi
+
+- **Nisanur Şen** (230229075) - Database + Entity + Repository Katmanı
+- **Ayşe Nur Yılmaz** (230229072) - Service + DTO + Exception Katmanı  
+- **F. Zehra Ateş** (230229082) - Controller + API + Dokümantasyon
 
 ## 📁 Proje Yapısı
 
 ```
-social-media-platform/
-├── database/          # Veritabanı şemaları, scriptler ve dökümanlar
-│   ├── schema.sql
-│   ├── sample-data.sql
-│   ├── triggers.sql
-│   ├── views.sql
-│   ├── procedures.sql
-│   └── TECHNICAL_DOCS.md
-├── backend/           # Spring Boot REST API
-│   ├── src/
+social-media-mikroblog/
+├── database/                    # Veritabanı şemaları ve scriptler
+│   ├── ER-Diagram.png         # Entity-Relationship diyagramı
+│   ├── schema.sql              # Tablo tanımları
+│   ├── sample-data.sql         # Örnek veriler
+│   ├── triggers.sql            # Trigger'lar
+│   ├── views.sql               # View'lar
+│   ├── procedures.sql          # Stored Procedures
+│   ├── test-queries.sql        # Test sorguları
+│   ├── README.md               # Database dokümantasyonu
+│   └── TECHNICAL_DOCS.md       # Teknik detaylar
+├── backend/                    # Spring Boot REST API
+│   ├── src/main/java/
+│   │   ├── entity/            # User, Post, Like, Hashtag, Follow
+│   │   ├── repository/        # Spring Data JPA repositories
+│   │   ├── dto/               # Data Transfer Objects
+│   │   ├── service/           # İş mantığı katmanı
+│   │   ├── controller/        # REST API endpoints
+│   │   └── exception/         # Custom exception'lar
 │   ├── pom.xml
 │   └── README.md
-├── frontend/          # Frontend uygulaması (Planlama aşamasında)
-│   └── README.md
-└── README.md
+└── README.md                  # Bu dosya
 ```
 
 ## 🚀 Hızlı Başlangıç
@@ -38,15 +51,27 @@ cd social-media-platform
 ### 2. Veritabanını Kur
 ```bash
 cd database
-mysql -u root -p < schema.sql
-mysql -u root -p social_media_db < sample-data.sql
+mysql -u root -p
+CREATE DATABASE social_media;
+exit;
+
+mysql -u root -p social_media < schema.sql
+mysql -u root -p social_media < views.sql
+mysql -u root -p social_media < procedures.sql
+mysql -u root -p social_media < triggers.sql
+mysql -u root -p social_media < sample-data.sql
 ```
 
 ### 3. Environment Variable Tanımla
 
-**Windows:**
+**Windows (CMD - Kalıcı):**
 ```cmd
 setx DB_PASSWORD "your_mysql_password"
+```
+
+**Windows (PowerShell - Geçici):**
+```powershell
+$env:DB_PASSWORD="your_mysql_password"
 ```
 
 **Linux/Mac:**
@@ -54,152 +79,165 @@ setx DB_PASSWORD "your_mysql_password"
 export DB_PASSWORD="your_mysql_password"
 ```
 
-⚠️ **Önemli:** Environment variable tanımladıktan sonra terminali/IDE'yi yeniden başlatın!
+⚠️ **Önemli:** `setx` ile tanımladıktan sonra terminali/IDE'yi yeniden başlatın!
 
 ### 4. Backend'i Çalıştır
 ```bash
 cd backend
+mvn clean install
 mvn spring-boot:run
 ```
 
-Backend http://localhost:8080 adresinde çalışacak.
+Backend `http://localhost:8080` adresinde çalışacak.
 
-### 5. Frontend'i Çalıştır
-```bash
-cd frontend
-# (Kurulum talimatları eklenecek)
-```
-
-## 🛠️ Teknolojiler
+## 🛠️ Kullanılan Teknolojiler
 
 ### Backend
-- Spring Boot 3.5.9
-- Spring Data JPA
-- MySQL 8.0
-- Lombok
-- Maven
+- **Java 17** - Programlama dili
+- **Spring Boot 3.5.9** - Framework
+- **Spring Data JPA** - ORM ve veri erişim katmanı
+- **Lombok** - Boilerplate kod azaltma
+- **Maven** - Dependency management
 
 ### Database
-- MySQL 8.0
-- Views, Triggers, Stored Procedures
-
-### Frontend
-- (Teknoloji seçimi devam ediyor)
-
-## 👥 Ekip ve Görev Dağılımı
-
-### 👤 Kişi 1 - Database + Backend Altyapı
-**Durum:** ✅ Tamamlandı
-
-- [x] ER Diagram tasarımı
-- [x] SQL şemaları (tablolar, view'lar, trigger'lar, procedure'ler)
-- [x] Spring Boot projesi kurulumu
-- [x] Entity sınıfları (User, Post, Like, Hashtag, Follow)
-- [x] Repository interface'leri
-- [x] Environment variable yapılandırması
-- [x] Test verileri
-- [x] Dokümantasyon
-
-**Öğrenilen Konular:**
-- Database tasarımı ve normalizasyon
-- Spring Boot proje yapısı
-- JPA/Hibernate ORM
-- Repository Pattern
-- Environment variable güvenliği
-
----
-
-### 👤 Kişi 2 - Business Logic (Service Katmanı)
-**Durum:** 🚧 Devam ediyor
-
-**Görevler:**
-- [ ] UserService (kayıt, giriş, profil yönetimi)
-- [ ] PostService (post oluşturma, listeleme, silme)
-- [ ] LikeService (beğeni/beğenmeme)
-- [ ] FollowService (takip/takipten çık)
-- [ ] DTO sınıfları
-- [ ] Exception handling
-- [ ] OOP prensipleri raporu
-
-**Kullanacağı Yapı:**
-- Kişi 1'in oluşturduğu Entity'ler
-- Kişi 1'in oluşturduğu Repository'ler
-
-**Öğrenilecek Konular:**
-- Service Layer Pattern
-- Business Logic
-- DTO (Data Transfer Object)
-- Exception Handling
-- OOP prensipleri
-
----
-
-### 👤 Kişi 3 - API + Frontend + Entegrasyon
-**Durum:** ⏳ Bekliyor
-
-**Görevler:**
-- [ ] REST Controller'lar (User, Post, Like, Follow)
-- [ ] API endpoint'leri
-- [ ] Frontend UI tasarımı
-- [ ] Backend-Frontend entegrasyonu
-- [ ] API testleri (Postman)
-- [ ] Demo video hazırlığı
-
-**Kullanacağı Yapı:**
-- Kişi 2'nin oluşturduğu Service'ler
-
-**Öğrenilecek Konular:**
-- RESTful API design
-- HTTP methods (GET, POST, PUT, DELETE)
-- Frontend-Backend entegrasyonu
-- API testing
+- **MySQL 8.0** - İlişkisel veritabanı
+- **View'lar** - Karmaşık sorguları basitleştirme
+- **Stored Procedures** - İş mantığını veritabanında yönetme
+- **Triggers** - Otomatik veri doğrulama ve temizleme
 
 ## 📋 Özellikler
 
-- ✅ Kullanıcı kaydı ve girişi
-- ✅ Post paylaşma
-- ✅ Beğeni sistemi
-- ✅ Takip sistemi
-- ✅ Hashtag desteği
-- ✅ Kullanıcı istatistikleri (View)
-- ✅ Trend hashtag'ler (View)
-- ✅ En çok beğenilen postlar (View)
+### Fonksiyonel Özellikler
+- ✅ Kullanıcı kaydı ve profil yönetimi
+- ✅ Post paylaşma, düzenleme, silme
+- ✅ Beğeni sistemi (like/unlike toggle)
+- ✅ Takip sistemi (follow/unfollow)
+- ✅ Hashtag otomatik çıkarma ve etiketleme
+- ✅ Kullanıcı istatistikleri (post sayısı, takipçi/takip)
+- ✅ Trend hashtag analizi (son 7 gün)
+- ✅ En çok beğenilen postlar listesi
 
-## 🗄️ Veritabanı
+### Teknik Özellikler
+- ✅ Çok katmanlı mimari (Entity-Repository-DTO-Service-Controller)
+- ✅ RESTful API tasarımı
+- ✅ DTO pattern ile güvenli veri transferi
+- ✅ Custom exception handling
+- ✅ JPA ilişkileri (OneToMany, ManyToMany, ManyToOne)
+- ✅ Transaction yönetimi
+- ✅ 3NF normalizasyon
+
+## 🗄️ Veritabanı Tasarımı
 
 ### Tablolar
-- **users** - Kullanıcı bilgileri
-- **posts** - Paylaşımlar
-- **likes** - Beğeniler
-- **follows** - Takip ilişkileri
-- **hashtags** - Hashtag'ler
-- **post_hashtags** - Post-Hashtag ilişkileri (M:N ara tablo)
+| Tablo | Açıklama | İlişkiler |
+|-------|----------|-----------|
+| `users` | Kullanıcı bilgileri | 1:N Posts, 1:N Likes, M:N Follows |
+| `posts` | Paylaşımlar | N:1 User, 1:N Likes, M:N Hashtags |
+| `likes` | Beğeniler | N:1 User, N:1 Post |
+| `follows` | Takip ilişkileri | N:1 Follower, N:1 Following |
+| `hashtags` | Hashtag'ler | M:N Posts |
+| `post_hashtags` | Ara tablo | Post-Hashtag M:N ilişkisi |
 
 ### View'lar
-- **mostlikedposts** - En çok beğenilen postlar
-- **userstats** - Kullanıcı istatistikleri
-- **trendinghashtags** - Trend hashtag'ler (son 7 gün)
+- **`mostlikedposts`** - En çok beğenilen postları listeler
+- **`userstats`** - Kullanıcı bazlı istatistikler (post, like, follower/following sayıları)
+- **`trendinghashtags`** - Son 7 günün trend hashtag'leri
 
 ### Stored Procedures
-- **DeletePostWithRelations** - Post ve ilişkilerini güvenli şekilde siler
-- **FollowUser** - Takip işlemi (kendini takip etmeyi engeller)
-- **ToggleLike** - Beğeni durumunu değiştirme (like/unlike)
+- **`DeletePostWithRelations(post_id)`** - Post ve tüm ilişkilerini güvenli şekilde siler
+- **`FollowUser(follower_id, following_id)`** - Takip işlemi (kendini takip engeli ile)
+- **`ToggleLike(user_id, post_id)`** - Beğeni durumunu değiştirme (varsa kaldır, yoksa ekle)
 
 ### Triggers
-- **before_post_delete** - Post silinmeden önce hashtag ilişkilerini temizler
-- **before_hashtag_insert** - Hashtag eklenirken normalize eder (küçük harf)
-- **before_user_delete** - Kullanıcı silinmeden önce post kontrolü yapar
+- **`before_post_delete`** - Post silinmeden önce hashtag ilişkilerini temizler
+- **`before_hashtag_insert`** - Hashtag ekleme sırasında normalizasyon (küçük harf + trim)
+- **`before_user_delete`** - Kullanıcı silinmeden önce post kontrolü (varsa engelle)
 
-## 📚 Dokümantasyon
+## 🏗️ Mimari ve Katmanlar
 
-- [Database Technical Documentation](database/TECHNICAL_DOCS.md) - Detaylı veritabanı dokümantasyonu
-- [Backend README](backend/README.md) - Backend kurulum ve kullanım
-- [Frontend README](frontend/README.md) - Frontend kurulum (yakında)
-- [API Documentation](docs/API.md) - REST API dokümantasyonu (yakında)
+### 1. Entity Katmanı (Nisanur Şen)
+- `User.java` - Kullanıcı entity
+- `Post.java` - Gönderi entity
+- `Like.java` - Beğeni entity
+- `Follow.java` - Takip entity
+- `Hashtag.java` - Hashtag entity
+
+### 2. Repository Katmanı (Nisanur Şen)
+- `UserRepository.java` - Kullanıcı veri erişimi
+- `PostRepository.java` - Gönderi veri erişimi
+- `LikeRepository.java` - Beğeni veri erişimi
+- `FollowRepository.java` - Takip veri erişimi
+- `HashtagRepository.java` - Hashtag veri erişimi
+
+### 3. DTO Katmanı (Ayşe Nur Yılmaz)
+- `UserDTO.java` - Kullanıcı veri transfer objesi
+- `PostDTO.java` - Gönderi veri transfer objesi
+- `LikeDTO.java` - Beğeni veri transfer objesi
+- `FollowDTO.java` - Takip veri transfer objesi
+- `HashtagDTO.java` - Hashtag veri transfer objesi
+- `AuthDTO.java` - Kimlik doğrulama (Register/Login)
+
+### 4. Service Katmanı (Ayşe Nur Yılmaz)
+- `UserService.java` - Kullanıcı iş mantığı
+- `PostService.java` - Gönderi iş mantığı
+- `LikeService.java` - Beğeni iş mantığı
+- `FollowService.java` - Takip iş mantığı
+- Custom Exception'lar ve Global Exception Handler
+
+### 5. Controller Katmanı (F. Zehra Ateş)
+- `UserController.java` - Kullanıcı REST API
+- `PostController.java` - Gönderi REST API
+- `LikeController.java` - Beğeni REST API
+- `FollowController.java` - Takip REST API
+
+## 🔌 API Endpoints
+
+### Base URL: `http://localhost:8080/api`
+
+#### User Endpoints
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/users/register` | Yeni kullanıcı kaydı |
+| POST | `/users/login` | Kullanıcı girişi |
+| GET | `/users/{id}` | Kullanıcı profili |
+| PUT | `/users/{id}` | Profil güncelleme |
+| GET | `/users` | Tüm kullanıcıları listele |
+| GET | `/users/search?term={term}` | Kullanıcı ara |
+
+#### Post Endpoints
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/posts` | Yeni gönderi oluştur |
+| GET | `/posts` | Tüm gönderileri listele |
+| GET | `/posts/{id}` | Tekil gönderi getir |
+| GET | `/posts/user/{userId}` | Kullanıcının gönderileri |
+| PUT | `/posts/{id}` | Gönderi güncelle |
+| DELETE | `/posts/{id}` | Gönderi sil |
+| GET | `/posts/hashtag/{tag}` | Hashtag'e göre ara |
+
+#### Like Endpoints
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/likes/toggle` | Beğeni ekle/kaldır |
+| GET | `/likes/post/{postId}` | Post beğenilerini listele |
+| GET | `/likes/user/{userId}` | Kullanıcının beğendikleri |
+| GET | `/likes/count/{postId}` | Post beğeni sayısı |
+
+#### Follow Endpoints
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| POST | `/follows/follow` | Kullanıcı takip et |
+| DELETE | `/follows/unfollow` | Takibi bırak |
+| GET | `/follows/followers/{userId}` | Takipçileri listele |
+| GET | `/follows/following/{userId}` | Takip edilenleri listele |
+| GET | `/follows/count/followers/{userId}` | Takipçi sayısı |
+| GET | `/follows/count/following/{userId}` | Takip edilen sayısı |
+
+Detaylı API dokümantasyonu ve request/response örnekleri için `docs/API.md` dosyasına bakın.
 
 ## 🧪 Test
 
-### Backend Test
+### Backend Testleri
 ```bash
 cd backend
 mvn test
@@ -208,65 +246,160 @@ mvn test
 ### MySQL Test Sorguları
 ```bash
 cd database
-mysql -u root -p social_media_db < test-queries.sql
+mysql -u root -p social_media < test-queries.sql
 ```
 
-### API Test
-Postman collection: `docs/postman_collection.json` _(yakında)_
+### Postman ile API Testleri
+1. Postman'i açın
+2. Import → `docs/postman_collection.json` _(yakında)_
+3. Environment variable `base_url=http://localhost:8080/api` olarak ayarlayın
+4. Test'leri çalıştırın
+
+### Test Senaryoları
+- ✅ Kullanıcı kaydı (duplicate kontrolü)
+- ✅ Post oluşturma ve hashtag çıkarma
+- ✅ Beğeni sistemi (toggle, duplicate engelleme)
+- ✅ Takip sistemi (self-follow engelleme)
+- ✅ View'lar (TrendingHashtags, MostLikedPosts)
+- ✅ Stored Procedure'ler (ToggleLike, FollowUser)
+
+## 🎯 OOP Prensipleri
+
+Projede uygulanan nesne yönelimli programlama prensipleri:
+
+### 1. Encapsulation (Kapsülleme)
+- Tüm field'lar `private`
+- Getter/Setter metodları ile kontrollü erişim
+- Lombok ile boilerplate kod azaltma
+
+### 2. Abstraction (Soyutlama)
+- Repository interface'leri ile veri erişimi soyutlama
+- Service katmanı ile iş mantığı soyutlama
+- DTO ile entity'leri dış dünyadan izole etme
+
+### 3. Inheritance (Kalıtım)
+- Custom Exception sınıfları `RuntimeException`'dan türer
+- Ortak davranışlar parent class'ta
+
+### 4. Polymorphism (Çok Biçimlilik)
+- Constructor overloading (DTO'larda farklı constructor'lar)
+- Method overloading
+
+### 5. Separation of Concerns
+- Her katman tek sorumluluğa sahip
+- Controller → HTTP işlemleri
+- Service → İş mantığı
+- Repository → Veri erişimi
+
+### 6. Dependency Injection
+- Spring Framework'ün IoC container'ı
+- `@Autowired` ile bağımlılık yönetimi
+- Loose coupling
+
 
 ## 🔒 Güvenlik
 
-- ✅ Şifreler environment variable olarak saklanır
-- ✅ Git'e hassas bilgiler commit edilmez
-- ✅ Her geliştirici kendi yerel yapılandırmasını kullanır
-- ⚠️ Production'da güçlü şifreler ve farklı kullanıcılar kullanılmalı
-
-## 📝 Kurulum Notları
-
-- Java 17 veya üzeri gereklidir
-- MySQL 8.0 kurulu olmalıdır
-- Port 8080 backend için kullanılmaktadır
-- Environment variable tanımladıktan sonra IDE yeniden başlatılmalıdır
+- ✅ Şifreler environment variable ile saklanır
+- ✅ `.gitignore` ile hassas dosyalar commit edilmez
+- ✅ DTO kullanımı ile entity'ler direkt expose edilmez
 
 ## 🐛 Sorun Giderme
 
-### Yaygın Sorunlar
+### MySQL Bağlantı Hatası
+**Hata:** `Communications link failure`
 
-#### MySQL bağlantı hatası
-```
-Çözüm: 
-- MySQL servisinin çalıştığından emin olun
-- DB_PASSWORD environment variable'ını kontrol edin
-- Database adının doğru olduğunu kontrol edin (social_media_db)
+**Çözüm:**
+```bash
+# MySQL servisini kontrol et
+# Windows:
+net start MySQL80
+
+# Linux:
+sudo systemctl start mysql
+
+# macOS:
+brew services start mysql
 ```
 
-#### Environment variable tanınmıyor
-```
-Çözüm:
-- setx ile tanımladıysanız terminali/IDE'yi yeniden başlatın
-- set komutu sadece o oturum için geçerlidir
+### Environment Variable Tanınmıyor
+**Hata:** `DB_PASSWORD` bulunamıyor
+
+**Çözüm:**
+```bash
+# 1. Terminali/IDE'yi yeniden başlat
+# 2. Veya geçici olarak set kullan:
+set DB_PASSWORD=your_password  # Windows CMD
+$env:DB_PASSWORD="your_password"  # Windows PowerShell
+export DB_PASSWORD="your_password"  # Linux/Mac
 ```
 
-#### Port çakışması
+### Port 8080 Kullanımda
+**Hata:** `Port 8080 is already in use`
+
+**Çözüm 1:** Farklı port kullan
+```properties
+# application.properties
+server.port=8081
 ```
-Çözüm:
-- application.properties dosyasında farklı port tanımlayın
-- Veya 8080 portunu kullanan uygulamayı kapatın
+
+**Çözüm 2:** Portu kullanan uygulamayı kapat
+```bash
+# Windows
+netstat -ano | findstr :8080
+taskkill /PID [PID_NUMARASI] /F
+
+# Linux/Mac
+lsof -ti:8080 | xargs kill -9
+```
+
+### Maven Build Hatası
+**Çözüm:**
+```bash
+# Cache temizle ve tekrar build et
+mvn clean install -U
 ```
 
 Daha fazla bilgi için:
 - [Backend Troubleshooting](backend/README.md#sorun-giderme)
 - [Database Issues](database/README.md#sorun-giderme)
 
+## 📚 Dokümantasyon
+
+- **[Database Technical Docs](database/TECHNICAL_DOCS.md)** - Detaylı veritabanı dokümantasyonu
+- **[Backend README](backend/README.md)** - Backend kurulum ve kullanım
+- **[ER Diagram](docs/ER-Diagram.png)** - Entity-Relationship diyagramı
+- **[Proje Raporu](docs/SOSYAL_MEDYA_RAPOR.pdf)** - Tam proje raporu
+- **API Documentation** - REST API detayları _(yakında)_
+
 ## 📊 Proje İstatistikleri
 
-- **Toplam Tablo:** 6
-- **View:** 3
-- **Stored Procedure:** 3
-- **Trigger:** 3
-- **Entity Sınıfı:** 5
-- **Repository:** 5
-- **Tahmini Süre:** 4 hafta
+| Kategori | Sayı |
+|----------|------|
+| **Entity Sınıfı** | 5 |
+| **Repository** | 5 |
+| **Service** | 4 |
+| **Controller** | 4 |
+| **DTO** | 6 |
+| **Database Tablosu** | 6 |
+| **View** | 3 |
+| **Stored Procedure** | 3 |
+| **Trigger** | 3 |
+| **Custom Exception** | 10 |
+
+## 🚀 Gelecek Geliştirmeler
+
+Proje ilerleyen aşamalarda şu özelliklerle genişletilebilir:
+
+- [ ] JWT ile authentication/authorization
+- [ ] WebSocket ile gerçek zamanlı bildirimler
+- [ ] Redis ile caching katmanı
+- [ ] Medya paylaşımı (resim, video)
+- [ ] React/Angular frontend uygulaması
+- [ ] Elasticsearch ile gelişmiş arama
+- [ ] Mesajlaşma sistemi
+- [ ] Email doğrulama
+- [ ] Rate limiting ve API throttling
+- [ ] Docker containerization
 
 ## 🤝 Katkıda Bulunma
 
@@ -278,12 +411,16 @@ Daha fazla bilgi için:
 
 ## 📄 Lisans
 
-Bu proje eğitim amaçlı geliştirilmiştir.
+Bu proje eğitim amaçlı geliştirilmiştir. Kocaeli Üniversitesi - Java ve Veritabanı Yönetimi dersi dönem projesi.
 
 ## 📧 İletişim
 
-Sorularınız için issue açabilirsiniz.
+Proje hakkında sorularınız için:
+- GitHub Issues
+- Email: [proje email'i buraya]
 
 ---
 
-**Son Güncelleme:** 28 Aralık 2025
+**Geliştirme Süresi:** 4 hafta  
+**Son Güncelleme:** Ocak 2026  
+**Durum:** ✅ Tamamlandı

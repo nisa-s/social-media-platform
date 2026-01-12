@@ -416,7 +416,6 @@ Bu proje eğitim amaçlı geliştirilmiştir. Kocaeli Üniversitesi - Java ve Ve
 
 Proje hakkında sorularınız için:
 - GitHub Issues
-- Email: [proje email'i buraya]
 
 ---
 

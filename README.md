@@ -361,7 +361,7 @@ mvn clean install -U
 
 Daha fazla bilgi için:
 - [Backend Troubleshooting](backend/README.md#sorun-giderme)
-- [Database Issues](database/README.md#sorun-giderme)
+- [Database Issues](database/README.md)
 
 ## 📚 Dokümantasyon
 
@@ -384,21 +384,6 @@ Daha fazla bilgi için:
 | **Stored Procedure** | 3 |
 | **Trigger** | 3 |
 | **Custom Exception** | 10 |
-
-## 🚀 Gelecek Geliştirmeler
-
-Proje ilerleyen aşamalarda şu özelliklerle genişletilebilir:
-
-- [ ] JWT ile authentication/authorization
-- [ ] WebSocket ile gerçek zamanlı bildirimler
-- [ ] Redis ile caching katmanı
-- [ ] Medya paylaşımı (resim, video)
-- [ ] React/Angular frontend uygulaması
-- [ ] Elasticsearch ile gelişmiş arama
-- [ ] Mesajlaşma sistemi
-- [ ] Email doğrulama
-- [ ] Rate limiting ve API throttling
-- [ ] Docker containerization
 
 ## 🤝 Katkıda Bulunma
 
